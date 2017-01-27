@@ -39,7 +39,7 @@ public class Year {
 
 	@Override
 	public String toString() {
-		return "" + year;
+		return new Integer(year).toString();
 	}
 
 }

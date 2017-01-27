@@ -28,7 +28,7 @@ public class LogonFormController {
 	UserDao dao;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	protected String showForm(HttpServletRequest request, Model model) throws Exception {
+	protected String showForm(HttpServletRequest request, Model model) {
 
 		LogonCommand logon = new LogonCommand();
 
@@ -38,7 +38,7 @@ public class LogonFormController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	protected String logout(HttpSession session) throws Exception {
+	protected String logout(HttpSession session) {
 		session.removeAttribute("logInSession");
 		log.info("Log out");
 		return "redirect:/";

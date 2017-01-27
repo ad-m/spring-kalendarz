@@ -161,6 +161,7 @@ public class PersistentEventDao extends EventDao {
 		return getRange(user, week.getStart(), week.getEnd());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Event> find(User user, String query) {
 		try (Session session = sessionFactory.openSession()) {

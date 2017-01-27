@@ -39,12 +39,10 @@ public class Event {
 	@Column(name = "eventStart", nullable = false)
 	private Date eventStart;
 
-	public Event() {
-	};
-
 	public Event(User user, Category category, String description, Date eventEnd, Date eventStart) {
 		super();
 		this.user = user;
+		this.category = category;
 		this.description = description;
 		this.eventEnd = eventEnd;
 		this.eventStart = eventStart;

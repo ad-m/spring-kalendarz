@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import dao.EventDao;
-import dao.UserDao;
 import model.Event;
 
 @Controller
 public class EventDetailController {
-	@Autowired
-	private UserDao user_dao;
-
 	@Autowired
 	private EventDao event_dao;
 	@Autowired

@@ -4,12 +4,16 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import model.User;
 
 public class PersistentUserDao extends UserDao {
+	private final Log log = LogFactory.getLog(getClass());
+
 	private SessionFactory sessionFactory; // Uchwyt do obiektu fabryki sesji
 
 	@SuppressWarnings("unchecked")
@@ -36,6 +40,7 @@ public class PersistentUserDao extends UserDao {
 
 			}
 		} catch (NoResultException e) {
+			log.info("Unable for user of username:" + username);
 			return null;
 		}
 	}
