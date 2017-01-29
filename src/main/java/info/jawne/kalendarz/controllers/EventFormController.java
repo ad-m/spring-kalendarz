@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
@@ -25,11 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import info.jawne.kalendarz.controllers.commands.LogonCommand;
 import info.jawne.kalendarz.controllers.editors.CategoryEditor;
 import info.jawne.kalendarz.dao.CategoryDao;
 import info.jawne.kalendarz.dao.EventDao;
 import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.exceptions.AuthorizationException;
 import info.jawne.kalendarz.models.Category;
 import info.jawne.kalendarz.models.Event;
 import info.jawne.kalendarz.models.Message;
@@ -56,17 +54,21 @@ public class EventFormController {
 	private LocalValidatorFactoryBean validator;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String create(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("event") Event event,
-			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) {
+	public String create(@ModelAttribute("event") Event event, BindingResult result, HttpSession session,
+			RedirectAttributes redirectAttributes) throws AuthorizationException {
 		return updateOrCreate(event, result, session, redirectAttributes);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String createForm(Model model) {
-		return form(model, new Event());
+	public String createForm(Model model, HttpSession session) throws AuthorizationException {
+		return form(model, new Event(), session);
 	}
 
-	private String form(Model model, Event attributeValue) {
+	private String form(Model model, Event attributeValue, HttpSession session) throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
 		model.addAttribute("event", attributeValue);
 		return "eventForm"; // book/create.jsp
 	}
@@ -80,22 +82,22 @@ public class EventFormController {
 	}
 
 	@RequestMapping(value = "detail-{id}", method = RequestMethod.POST)
-	public String update(HttpServletRequest request, @PathVariable int id, HttpServletResponse response,
-			@ModelAttribute("event") Event event, BindingResult result, HttpSession session,
-			RedirectAttributes redirectAttributes) {
+	public String update(@ModelAttribute("event") Event event, BindingResult result, HttpSession session,
+			RedirectAttributes redirectAttributes) throws AuthorizationException {
 		return updateOrCreate(event, result, session, redirectAttributes);
 	}
 
 	@RequestMapping(value = "edit-{id}", method = RequestMethod.GET)
-	public String updateForm(Model model, @PathVariable int id) {
-		return form(model, event_dao.getById(id));
+	public String updateForm(Model model, @PathVariable int id, HttpSession session) throws AuthorizationException {
+		return form(model, event_dao.getById(id), session);
 	}
 
 	private String updateOrCreate(Event event, BindingResult result, HttpSession session,
-			RedirectAttributes redirectAttributes) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
-		// User user = user_dao.getById(3);
+			RedirectAttributes redirectAttributes) throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
 		event.setUser(user);
 		validator.validate(event, result);
 		if (result.hasErrors()) {

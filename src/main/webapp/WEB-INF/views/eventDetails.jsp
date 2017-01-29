@@ -13,6 +13,8 @@
     <jsp:body>
 		<p>Start: ${event.eventStart}</p>
 		<p>End: ${event.eventEnd}</p>
-		
+		<c:if test="${not empty event.category}">
+    		<p>Category: ${event.category.name}</p>
+		</c:if>
     </jsp:body>
 </t:genericpage>

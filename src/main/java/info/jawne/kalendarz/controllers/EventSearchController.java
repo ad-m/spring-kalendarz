@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import info.jawne.kalendarz.controllers.commands.LogonCommand;
 import info.jawne.kalendarz.dao.EventDao;
 import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.exceptions.AuthorizationException;
 import info.jawne.kalendarz.models.User;
 
 @Controller
@@ -27,9 +27,12 @@ public class EventSearchController {
 
 	@RequestMapping(value = "/event-search", method = RequestMethod.GET)
 	public String details(@RequestParam("query") String query, Model model, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
+			HttpServletResponse response, HttpSession session, RedirectAttributes redirectAttributes)
+			throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
 		model.addAttribute("query", query);
 		model.addAttribute("event_list", event_dao.find(user, query));
 		return "eventSearchList";

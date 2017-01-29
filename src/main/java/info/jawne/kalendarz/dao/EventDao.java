@@ -18,6 +18,8 @@ abstract public class EventDao implements AbstractDao<Event> {
 
 	abstract public List<Event> find(User user, String string);
 
+	abstract public Event getWithCategory(long id);
+
 	abstract public Date getMax(User user);
 
 	abstract public Date getMin(User user);

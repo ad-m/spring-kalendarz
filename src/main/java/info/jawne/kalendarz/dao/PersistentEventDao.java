@@ -104,4 +104,13 @@ public class PersistentEventDao extends EventDao {
 		return all(user).stream().min((p1, p2) -> p1.getEventStart().compareTo(p2.getEventStart())).get()
 				.getEventStart();
 	}
+
+	@Override
+	public Event getWithCategory(long id) {
+		try (Session session = sessionFactory.openSession()) {
+			return (Event) session
+					.createQuery("FROM " + Event.class.getName() + " as e left join fetch e.category where e.id = :id")
+					.setParameter("id", id).getSingleResult();
+		}
+	};
 }

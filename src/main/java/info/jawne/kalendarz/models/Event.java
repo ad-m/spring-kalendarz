@@ -22,11 +22,11 @@ public class Event {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	private Category category;
 

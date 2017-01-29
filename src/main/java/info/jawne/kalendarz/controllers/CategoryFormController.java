@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import info.jawne.kalendarz.controllers.commands.LogonCommand;
 import info.jawne.kalendarz.dao.CategoryDao;
 import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.exceptions.AuthorizationException;
 import info.jawne.kalendarz.models.Category;
 import info.jawne.kalendarz.models.Message;
 import info.jawne.kalendarz.models.User;
@@ -28,50 +28,56 @@ import info.jawne.kalendarz.models.User;
 @Controller
 @RequestMapping(value = "/categories")
 public class CategoryFormController {
+	private final Log log = LogFactory.getLog(getClass());
 	@Autowired
 	CategoryDao category_dao;
-
-	private final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource messageSource;
 
 	@Autowired
 	UserDao user_dao;
+
 	@Autowired
 	LocalValidatorFactoryBean validator;
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(Model model, @ModelAttribute("category") Category category, HttpSession session,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+			BindingResult result, RedirectAttributes redirectAttributes) throws AuthorizationException {
 		return updateOrCreate(category, session, result, redirectAttributes);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String createForm(Model model) {
-		return form(model, new Category());
+	public String createForm(Model model, HttpSession session) throws AuthorizationException {
+		return form(model, new Category(), session);
 	}
 
-	private String form(Model model, Category c) {
+	private String form(Model model, Category c, HttpSession session) throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
 		model.addAttribute("category", c);
 		return "categoryForm";
 	}
 
 	@RequestMapping(value = "{id}", method = RequestMethod.POST)
 	public String update(Model model, @ModelAttribute("category") Category category, HttpSession session,
-			BindingResult result, RedirectAttributes redirectAttributes) {
+			BindingResult result, RedirectAttributes redirectAttributes) throws AuthorizationException {
 		return updateOrCreate(category, session, result, redirectAttributes);
 	}
 
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public String updateForm(Model model, @PathVariable Integer id) {
-		return form(model, category_dao.getById(id));
+	public String updateForm(Model model, @PathVariable Integer id, HttpSession session) throws AuthorizationException {
+		return form(model, category_dao.getById(id), session);
 	}
 
 	private String updateOrCreate(Category category, HttpSession session, BindingResult result,
-			RedirectAttributes redirectAttributes) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
+			RedirectAttributes redirectAttributes) throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
 		category.setUser(user);
 		validator.validate(category, result);
 		if (result.hasErrors()) {

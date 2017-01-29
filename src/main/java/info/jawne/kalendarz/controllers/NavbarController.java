@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import info.jawne.kalendarz.controllers.commands.LogonCommand;
 import info.jawne.kalendarz.dao.CategoryDao;
 import info.jawne.kalendarz.dao.EventDao;
 import info.jawne.kalendarz.dao.UserDao;
@@ -34,16 +33,17 @@ class NavbarController {
 
 	@ModelAttribute
 	public void populateModel(HttpSession session, Model model) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
+		String username = (String) session.getAttribute("username");
 
-		if (logon == null) {
+		if (username == null) {
 			return;
 		}
 
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
+		User user = user_dao.getByUsernameOrNull(username);
 		if (user == null) {
 			return;
 		}
+
 		model.addAttribute("user", user);
 
 		model.addAttribute("userCategories", category_dao.forUser(user));

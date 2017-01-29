@@ -29,9 +29,11 @@ public class LogonFormController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	protected String logout(HttpSession session) {
-		session.removeAttribute("logInSession");
+		session.removeAttribute("username");
 		log.info("Log out");
+
 		return "redirect:/";
+
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -40,25 +42,29 @@ public class LogonFormController {
 			RedirectAttributes redirectAttributes) {
 
 		if (errors.hasErrors()) {
+
 			return "user/loginForm";
+
 		} else if (!dao.checkUser(logon.getUsername(), logon.getPassword())) {
 			errors.rejectValue("username", null, "Nie ma uzytkownika o takim nazwie i hasle.");
 			log.error("Nie prawidłowe dane.");
+
 			return "user/loginForm";
+
 		} else {
 			log.info("Użytkownik został zalogowany");
 			redirectAttributes.addFlashAttribute("message", new Message(Message.Status.SUCCESS, "Witaj świecie!"));
-			session.setAttribute("logInSession", logon);
+			session.setAttribute("username", logon.getUsername());
+
 			return "redirect:/";
+
 		}
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	protected String showForm(HttpServletRequest request, Model model) {
 
-		LogonCommand logon = new LogonCommand();
-
-		model.addAttribute("logonCommand", logon);
+		model.addAttribute("logonCommand", new LogonCommand());
 
 		return "user/loginForm";
 	}
