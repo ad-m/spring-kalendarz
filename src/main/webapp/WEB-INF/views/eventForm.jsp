@@ -12,34 +12,10 @@
     </jsp:attribute>
     <jsp:body>
 		<form:form commandName="event">
-			<div class="form-group row">
-	      		<label class="col-sm-2 col-form-label"><fmt:message key="eventForm.eventStart"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="eventStart" type="date" class="form-control"/>
-					<form:errors path="eventStart" cssStyle="color:red;"/>
-	      		</div>
-	    	</div>
-		    <div class="form-group row">
-	    		<label class="col-sm-2 col-form-label"><fmt:message key="eventForm.eventEnd"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="eventEnd" type="date"  class="form-control"/>
-					<form:errors path="eventEnd" cssStyle="color:red;"/>
-		    	</div>
-	    	</div>
-		    <div class="form-group row">
-	    		<label class="col-sm-2 col-form-label"><fmt:message key="eventForm.description"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="description" class="form-control"/>
-					<form:errors path="description" cssStyle="color:red;"/>
-		    	</div>
-	    	</div>
-		    <div class="form-group row">
-	    		<label class="col-sm-2 col-form-label"><fmt:message key="eventForm.category"/></label>
-	      		<div class="col-sm-10">
-	        		<form:select path="category" items="${userCategories}" itemLabel="name" itemValue="id"/>
-					<form:errors path="category" cssStyle="color:red;"/>
-		    	</div>
-	    	</div>
+			<t:form_input path="eventStart" key="eventForm.eventStart"/>
+			<t:form_input path="eventEnd" key="eventForm.eventEnd"/>
+			<t:form_input path="description" key="eventForm.description"/>
+			<t:form_select path="category" key="eventForm.category" items="${userCategories}"/>			
 
 	    	<div class="form-group row">
 	    		<div class="offset-sm-2 col-sm-10">
