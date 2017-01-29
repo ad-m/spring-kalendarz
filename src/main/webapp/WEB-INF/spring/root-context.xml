@@ -4,13 +4,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="eventDao" class="dao.PersistentEventDao">
+	<bean id="eventDao" class="info.jawne.kalendarz.dao.PersistentEventDao">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	<bean id="userDao" class="dao.PersistentUserDao">
+	<bean id="userDao" class="info.jawne.kalendarz.dao.PersistentUserDao">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	<bean id="categoryDao" class="dao.PersistentCategoryDao">
+	<bean id="categoryDao" class="info.jawne.kalendarz.dao.PersistentCategoryDao">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	<bean id="propertyConfigurer" class= "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -28,7 +28,7 @@
 	</bean>
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/> 
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-      <property name="packagesToScan" value="model" />
+      <property name="packagesToScan" value="info.jawne.kalendarz.models" />
       <property name="hibernateProperties">
             <props>
                 <!-- Dialekt dla MySQL

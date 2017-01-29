@@ -1,13 +1,13 @@
-package dao;
+package info.jawne.kalendarz.dao;
 
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import model.Category;
-import model.Event;
-import model.User;
+import info.jawne.kalendarz.models.Category;
+import info.jawne.kalendarz.models.Event;
+import info.jawne.kalendarz.models.User;
 
 public class PersistentCategoryDao extends CategoryDao {
 	private SessionFactory sessionFactory; // Uchwyt do obiektu fabryki sesji

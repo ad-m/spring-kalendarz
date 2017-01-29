@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dao.CategoryDao;
-import model.Message;
+import info.jawne.kalendarz.dao.CategoryDao;
+import info.jawne.kalendarz.models.Message;
 
 @Controller
 public class CategoryDeleteController {

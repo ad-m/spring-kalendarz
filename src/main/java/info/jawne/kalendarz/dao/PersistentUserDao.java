@@ -1,4 +1,4 @@
-package dao;
+package info.jawne.kalendarz.dao;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import model.User;
+import info.jawne.kalendarz.models.User;
 
 public class PersistentUserDao extends UserDao {
 	private final Log log = LogFactory.getLog(getClass());
@@ -40,7 +40,7 @@ public class PersistentUserDao extends UserDao {
 
 			}
 		} catch (NoResultException e) {
-			log.info("Unable for user of username:" + username);
+			log.info(e.getMessage());
 			return null;
 		}
 	}

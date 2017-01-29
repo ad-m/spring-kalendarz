@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dao.EventDao;
-import dao.UserDao;
 import info.jawne.kalendarz.controllers.commands.LogonCommand;
-import model.User;
+import info.jawne.kalendarz.dao.EventDao;
+import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.models.User;
 
 @Controller
 public class EventSearchController {

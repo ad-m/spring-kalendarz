@@ -1,9 +1,9 @@
-package controllers;
+package info.jawne.kalendarz.controllers.editors;
 
 import java.beans.PropertyEditorSupport;
 
-import dao.CategoryDao;
-import model.Category;
+import info.jawne.kalendarz.dao.CategoryDao;
+import info.jawne.kalendarz.models.Category;
 
 public class CategoryEditor extends PropertyEditorSupport {
 

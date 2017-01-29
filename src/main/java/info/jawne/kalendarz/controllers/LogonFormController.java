@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dao.UserDao;
 import info.jawne.kalendarz.controllers.commands.LogonCommand;
-import model.Message;
+import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.models.Message;
 
 @Controller
 public class LogonFormController {

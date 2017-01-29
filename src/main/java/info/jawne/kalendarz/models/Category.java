@@ -1,4 +1,4 @@
-package model;
+package info.jawne.kalendarz.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

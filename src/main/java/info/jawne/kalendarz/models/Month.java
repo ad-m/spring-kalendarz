@@ -1,4 +1,4 @@
-package model;
+package info.jawne.kalendarz.models;
 
 import java.util.Calendar;
 import java.util.Date;

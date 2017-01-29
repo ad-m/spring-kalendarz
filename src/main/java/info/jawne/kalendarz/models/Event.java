@@ -1,4 +1,4 @@
-package model;
+package info.jawne.kalendarz.models;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -48,6 +48,10 @@ public class Event {
 		this.eventStart = eventStart;
 	}
 
+	public Event() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Category getCategory() {
 		return category;
 	}
@@ -76,11 +80,6 @@ public class Event {
 
 	public User getUser() {
 		return user;
-	}
-
-	public Year getYear() {
-		LocalDate localDate = getEventStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		return new Year(localDate.getYear());
 	}
 
 	public void setCategory(Category category) {

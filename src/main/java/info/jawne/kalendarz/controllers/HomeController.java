@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import dao.UserDao;
+import info.jawne.kalendarz.dao.UserDao;
 
 @Controller
 public class HomeController {

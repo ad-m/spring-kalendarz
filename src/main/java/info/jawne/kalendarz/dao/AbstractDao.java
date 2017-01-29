@@ -1,4 +1,4 @@
-package dao;
+package info.jawne.kalendarz.dao;
 
 import java.util.List;
 

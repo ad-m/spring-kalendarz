@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import dao.CategoryDao;
-import dao.UserDao;
 import info.jawne.kalendarz.controllers.commands.LogonCommand;
-import model.Category;
-import model.Message;
-import model.User;
+import info.jawne.kalendarz.dao.CategoryDao;
+import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.models.Category;
+import info.jawne.kalendarz.models.Message;
+import info.jawne.kalendarz.models.User;
 
 @Controller
 @RequestMapping(value = "/categories")

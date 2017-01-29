@@ -1,6 +1,6 @@
-package dao;
+package info.jawne.kalendarz.dao;
 
-import model.User;
+import info.jawne.kalendarz.models.User;
 
 abstract public class UserDao implements AbstractDao<User> {
 

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import dao.CategoryDao;
-import dao.EventDao;
-import dao.UserDao;
 import info.jawne.kalendarz.controllers.commands.LogonCommand;
-import model.User;
+import info.jawne.kalendarz.dao.CategoryDao;
+import info.jawne.kalendarz.dao.EventDao;
+import info.jawne.kalendarz.dao.UserDao;
+import info.jawne.kalendarz.models.User;
 
 @ControllerAdvice
 class NavbarController {
@@ -42,8 +42,6 @@ class NavbarController {
 		model.addAttribute("user", user);
 
 		model.addAttribute("userCategories", category_dao.forUser(user));
-		model.addAttribute("userYears", event_dao.getYearList(user));
-
 	}
 
 	@InitBinder

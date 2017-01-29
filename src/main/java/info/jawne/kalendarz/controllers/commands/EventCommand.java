@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import model.Category;
+import info.jawne.kalendarz.models.Category;
 
 public class EventCommand {
 	@NotBlank

@@ -1,4 +1,4 @@
-package model;
+package info.jawne.kalendarz.models;
 
 public class Message {
 	public enum Status {
