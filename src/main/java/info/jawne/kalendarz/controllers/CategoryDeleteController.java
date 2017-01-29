@@ -18,13 +18,13 @@ import info.jawne.kalendarz.models.Message;
 
 @Controller
 public class CategoryDeleteController {
+	@Autowired
+	CategoryDao category_dao;
+
 	private final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource messageSource;
-
-	@Autowired
-	CategoryDao category_dao;
 
 	@RequestMapping(value = "/categories/{id}/delete", method = RequestMethod.POST)
 	public String action(Model model, @PathVariable int id, RedirectAttributes redirectAttributes) {

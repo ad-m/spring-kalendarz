@@ -18,9 +18,9 @@ import info.jawne.kalendarz.models.Event;
 @Controller
 public class EventDetailController {
 	@Autowired
-	private EventDao event_dao;
-	@Autowired
 	private EventDao category_dao;
+	@Autowired
+	private EventDao event_dao;
 
 	@RequestMapping(value = "/event-{id}", method = RequestMethod.GET)
 	public String details(@PathVariable int id, Model model, HttpServletRequest request, HttpServletResponse response,

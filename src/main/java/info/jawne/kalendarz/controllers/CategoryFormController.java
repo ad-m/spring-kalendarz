@@ -28,13 +28,13 @@ import info.jawne.kalendarz.models.User;
 @Controller
 @RequestMapping(value = "/categories")
 public class CategoryFormController {
+	@Autowired
+	CategoryDao category_dao;
+
 	private final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource messageSource;
-
-	@Autowired
-	CategoryDao category_dao;
 
 	@Autowired
 	UserDao user_dao;
@@ -44,6 +44,32 @@ public class CategoryFormController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(Model model, @ModelAttribute("category") Category category, HttpSession session,
 			BindingResult result, RedirectAttributes redirectAttributes) {
+		return updateOrCreate(category, session, result, redirectAttributes);
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String createForm(Model model) {
+		return form(model, new Category());
+	}
+
+	private String form(Model model, Category c) {
+		model.addAttribute("category", c);
+		return "categoryForm";
+	}
+
+	@RequestMapping(value = "{id}", method = RequestMethod.POST)
+	public String update(Model model, @ModelAttribute("category") Category category, HttpSession session,
+			BindingResult result, RedirectAttributes redirectAttributes) {
+		return updateOrCreate(category, session, result, redirectAttributes);
+	}
+
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public String updateForm(Model model, @PathVariable Integer id) {
+		return form(model, category_dao.getById(id));
+	}
+
+	private String updateOrCreate(Category category, HttpSession session, BindingResult result,
+			RedirectAttributes redirectAttributes) {
 		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
 		User user = user_dao.getByUsernameOrNull(logon.getUsername());
 		category.setUser(user);
@@ -54,37 +80,6 @@ public class CategoryFormController {
 		category_dao.saveOrUpdate(category);
 		redirectAttributes.addFlashAttribute("message", new Message(Message.Status.SUCCESS,
 				messageSource.getMessage("CategoryFormController.saved", null, Locale.US)));
-		log.info("Kategoria zostało zarejestrowana.");
-		return "redirect:/";
-	}
-
-	@RequestMapping(method = RequestMethod.GET)
-	public String createForm(Model model) {
-		model.addAttribute("category", new Category());
-		return "categoryForm";
-	}
-
-	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public String updateForm(Model model, @PathVariable Integer id) {
-		model.addAttribute("category", category_dao.getById(id));
-		return "categoryForm";
-	}
-
-	@RequestMapping(value = "{id}", method = RequestMethod.POST)
-	public String update(Model model, @ModelAttribute("category") Category category, HttpSession session,
-			BindingResult result, RedirectAttributes redirectAttributes) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
-		category.setUser(user);
-		validator.validate(category, result);
-		if (result.hasErrors()) {
-			return "categoryForm";
-		}
-
-		category_dao.saveOrUpdate(category);
-
-		redirectAttributes.addFlashAttribute("message", new Message(Message.Status.SUCCESS,
-				messageSource.getMessage("CategoryFormController.updated", null, Locale.US)));
 		log.info("Kategoria zostało zarejestrowana.");
 		return "redirect:/";
 	}

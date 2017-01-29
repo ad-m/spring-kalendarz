@@ -14,9 +14,9 @@ import info.jawne.kalendarz.dao.UserDao;
 
 @Controller
 public class HomeController {
-	protected final Log log = LogFactory.getLog(getClass());
 	@Autowired
 	UserDao dao;
+	protected final Log log = LogFactory.getLog(getClass());
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String show(Model model, HttpSession session) {

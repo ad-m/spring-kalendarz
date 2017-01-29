@@ -19,13 +19,18 @@ import info.jawne.kalendarz.models.User;
 class NavbarController {
 
 	@Autowired
-	UserDao user_dao;
-
-	@Autowired
 	CategoryDao category_dao;
 
 	@Autowired
 	EventDao event_dao;
+
+	@Autowired
+	UserDao user_dao;
+
+	@InitBinder
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.setBindEmptyMultipartFiles(false);
+	}
 
 	@ModelAttribute
 	public void populateModel(HttpSession session, Model model) {
@@ -42,10 +47,5 @@ class NavbarController {
 		model.addAttribute("user", user);
 
 		model.addAttribute("userCategories", category_dao.forUser(user));
-	}
-
-	@InitBinder
-	public void initBinder(WebDataBinder webDataBinder) {
-		webDataBinder.setBindEmptyMultipartFiles(false);
 	}
 }

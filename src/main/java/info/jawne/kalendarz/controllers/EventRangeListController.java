@@ -21,10 +21,10 @@ import info.jawne.kalendarz.models.Week;
 @Controller
 public class EventRangeListController {
 	@Autowired
-	private UserDao user_dao;
+	private EventDao event_dao;
 
 	@Autowired
-	private EventDao event_dao;
+	private UserDao user_dao;
 
 	@RequestMapping(value = "/events/{year}/{week}", method = RequestMethod.GET)
 	public String list(@PathVariable int year, @PathVariable int month, @PathVariable int week, Model model,

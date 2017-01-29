@@ -20,10 +20,10 @@ import info.jawne.kalendarz.models.User;
 @Controller
 public class EventSearchController {
 	@Autowired
-	private UserDao user_dao;
+	private EventDao event_dao;
 
 	@Autowired
-	private EventDao event_dao;
+	private UserDao user_dao;
 
 	@RequestMapping(value = "/event-search", method = RequestMethod.GET)
 	public String details(@RequestParam("query") String query, Model model, HttpServletRequest request,

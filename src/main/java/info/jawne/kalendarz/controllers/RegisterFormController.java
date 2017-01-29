@@ -23,9 +23,9 @@ import info.jawne.kalendarz.models.User;
 @RequestMapping("/register")
 @Controller
 public class RegisterFormController {
-	protected final Log log = LogFactory.getLog(getClass());
 	@Autowired
 	UserDao dao;
+	protected final Log log = LogFactory.getLog(getClass());
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(HttpServletRequest request, HttpServletResponse response, @Valid RegisterCommand register,

@@ -22,20 +22,10 @@ import info.jawne.kalendarz.models.Message;
 @Controller
 public class LogonFormController {
 
-	protected final Log log = LogFactory.getLog(getClass());
-
 	@Autowired
 	UserDao dao;
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	protected String showForm(HttpServletRequest request, Model model) {
-
-		LogonCommand logon = new LogonCommand();
-
-		model.addAttribute("logonCommand", logon);
-
-		return "user/loginForm";
-	}
+	protected final Log log = LogFactory.getLog(getClass());
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	protected String logout(HttpSession session) {
@@ -61,5 +51,15 @@ public class LogonFormController {
 			session.setAttribute("logInSession", logon);
 			return "redirect:/";
 		}
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	protected String showForm(HttpServletRequest request, Model model) {
+
+		LogonCommand logon = new LogonCommand();
+
+		model.addAttribute("logonCommand", logon);
+
+		return "user/loginForm";
 	}
 }

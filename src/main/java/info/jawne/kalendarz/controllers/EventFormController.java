@@ -38,19 +38,19 @@ import info.jawne.kalendarz.models.User;
 @Controller
 @RequestMapping("/events/~create")
 public class EventFormController {
+	@Autowired
+	private CategoryDao category_dao;
+
+	@Autowired
+	private EventDao event_dao;
+
 	private final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource messageSource;
 
 	@Autowired
-	private CategoryDao category_dao;
-
-	@Autowired
 	private UserDao user_dao;
-
-	@Autowired
-	private EventDao event_dao;
 
 	@Autowired
 	private LocalValidatorFactoryBean validator;
@@ -58,34 +58,40 @@ public class EventFormController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String create(HttpServletRequest request, HttpServletResponse response, @ModelAttribute("event") Event event,
 			BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) {
-		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
-		User user = user_dao.getByUsernameOrNull(logon.getUsername());
-		// User user = user_dao.getById(3);
-		event.setUser(user);
-		validator.validate(event, result);
-		if (result.hasErrors()) {
-			return "eventForm";
-		} else if (event.getEventEnd().compareTo(event.getEventStart()) < 0) {
-			result.rejectValue("eventEnd", null, "Podany czas jest za późno.");
-			log.error("Nie prawidłowe dane.");
-			return "eventForm";
-		}
-		event_dao.saveOrUpdate(event);
-		redirectAttributes.addFlashAttribute("message", new Message(Message.Status.SUCCESS,
-				messageSource.getMessage("EventFormController.saved", null, Locale.US)));
-		log.info("Wydarzenie zostało zarejestrowane.");
-		return "redirect:/";
+		return updateOrCreate(event, result, session, redirectAttributes);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String createForm(Model model) {
-		model.addAttribute("event", new Event());
+		return form(model, new Event());
+	}
+
+	private String form(Model model, Event attributeValue) {
+		model.addAttribute("event", attributeValue);
 		return "eventForm"; // book/create.jsp
+	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		binder.registerCustomEditor(Category.class, new CategoryEditor(category_dao));
 	}
 
 	@RequestMapping(value = "detail-{id}", method = RequestMethod.POST)
 	public String update(HttpServletRequest request, @PathVariable int id, HttpServletResponse response,
 			@ModelAttribute("event") Event event, BindingResult result, HttpSession session,
+			RedirectAttributes redirectAttributes) {
+		return updateOrCreate(event, result, session, redirectAttributes);
+	}
+
+	@RequestMapping(value = "edit-{id}", method = RequestMethod.GET)
+	public String updateForm(Model model, @PathVariable int id) {
+		return form(model, event_dao.getById(id));
+	}
+
+	private String updateOrCreate(Event event, BindingResult result, HttpSession session,
 			RedirectAttributes redirectAttributes) {
 		LogonCommand logon = (LogonCommand) session.getAttribute("logInSession");
 		User user = user_dao.getByUsernameOrNull(logon.getUsername());
@@ -105,13 +111,4 @@ public class EventFormController {
 		log.info("Wydarzenie zostało zarejestrowane.");
 		return "redirect:/";
 	}
-
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
-		binder.registerCustomEditor(Category.class, new CategoryEditor(category_dao));
-	}
-
 }
