@@ -9,10 +9,10 @@
 <t:genericpage>
     <jsp:attribute name="title">Wyniki wyszukiwania "${query}"</jsp:attribute>
     <jsp:body>
-		<ul>
+		<div class="card-columns">
 			<c:forEach items="${event_list}" var="element"> 
-				<li><a href="/kalendarz/event-${element.id}">${element.description}</a></li>
+				<t:event_small item="${element}"></t:event_small>
 			</c:forEach>
-		</ul>
+		</div>
     </jsp:body>
 </t:genericpage>

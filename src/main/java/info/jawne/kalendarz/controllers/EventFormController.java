@@ -1,8 +1,8 @@
 package info.jawne.kalendarz.controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import info.jawne.kalendarz.controllers.commands.EventLookupCommand;
 import info.jawne.kalendarz.controllers.editors.CategoryEditor;
+import info.jawne.kalendarz.controllers.utils.EventLookup;
 import info.jawne.kalendarz.dao.CategoryDao;
 import info.jawne.kalendarz.dao.EventDao;
 import info.jawne.kalendarz.dao.UserDao;
@@ -61,8 +63,38 @@ public class EventFormController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String createForm(Model model, HttpSession session) throws AuthorizationException {
-		return form(model, new Event(), session);
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
+		Event event = new Event();
+		event.setEventStart(new Date());
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.add(Calendar.MINUTE, 15);
+		event.setEventEnd(c.getTime());
+
+		return form(model, event, session);
 	}
+
+	@RequestMapping(value = "suggestion-{id}", method = RequestMethod.GET)
+	public String suggestionForm(Model model, @PathVariable int id, HttpSession session) throws AuthorizationException {
+		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
+		if (user == null) {
+			throw new AuthorizationException();
+		}
+		EventLookupCommand command = (EventLookupCommand) session.getAttribute("eventLookupCommand");
+
+		EventLookup lookup = new EventLookup(event_dao, user, command.getStart(), command.getEnd(),
+				command.getDurationEvent());
+		Event event = new Event();
+		Date start = lookup.getList().get(id).getEvent().getEventEnd();
+		event.setEventStart(start);
+		// end = start + duration
+		event.setEventEnd(Date.from(start.toInstant().plus(command.getDurationEvent())));
+
+		return form(model, event, session);
+	};
 
 	private String form(Model model, Event attributeValue, HttpSession session) throws AuthorizationException {
 		User user = user_dao.getByUsernameOrNull((String) session.getAttribute("username"));
@@ -81,7 +113,7 @@ public class EventFormController {
 		binder.registerCustomEditor(Category.class, new CategoryEditor(category_dao));
 	}
 
-	@RequestMapping(value = "detail-{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "edit-{id}", method = RequestMethod.POST)
 	public String update(@ModelAttribute("event") Event event, BindingResult result, HttpSession session,
 			RedirectAttributes redirectAttributes) throws AuthorizationException {
 		return updateOrCreate(event, result, session, redirectAttributes);
@@ -100,17 +132,24 @@ public class EventFormController {
 		}
 		event.setUser(user);
 		validator.validate(event, result);
+
 		if (result.hasErrors()) {
 			return "eventForm";
 		} else if (event.getEventEnd().compareTo(event.getEventStart()) < 0) {
-			result.rejectValue("eventEnd", null, "Podany czas jest za późno.");
+			result.rejectValue("eventEnd", null,
+					"Aplikacja nie wspiera planowania podróży w czasie. Jak coś się zaczyna to kończyć się powinno w terminie po swoim początku.");
+			log.error("Nie prawidłowe dane.");
+			return "eventForm";
+		} else if (event.getId() == 0 && !event_dao.isDateFree(user, event.getEventStart(), event.getEventEnd())) {
+			result.rejectValue("eventStart", null,
+					"Nie pozwolę Ci się tak przepracowywać. W dwóch miejscach na raz człowiek być nie może.");
 			log.error("Nie prawidłowe dane.");
 			return "eventForm";
 		}
 		event_dao.saveOrUpdate(event);
-		redirectAttributes.addFlashAttribute("message", new Message(Message.Status.SUCCESS,
-				messageSource.getMessage("EventFormController.saved", null, Locale.US)));
+		redirectAttributes.addFlashAttribute("message",
+				new Message(Message.Status.SUCCESS, "Wydarzenie zostało zapisane"));
 		log.info("Wydarzenie zostało zarejestrowane.");
-		return "redirect:/";
+		return "redirect:/event-" + event.getId();
 	}
 }

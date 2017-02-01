@@ -10,7 +10,7 @@
       <fmt:message key="categoryDelete.label"/>
     </jsp:attribute>
     <jsp:body>
-		<p>Naciśnij, aby potwierdzić usunięcie "${category.name}" z bazy danych. Żadne wydarzenia nie zostaną naruszone.</p>
+		<p>Naciśnij, aby potwierdzić usunięcie "<c:out value="${category.name}"/>" z bazy danych. Żadne wydarzenia nie zostaną naruszone.</p>
 		<form method="post" action="?">
 			<button type="submit" name="delete" class="btn btn-danger"><fmt:message key="categoryForm.delete"/></button>
 		</form>

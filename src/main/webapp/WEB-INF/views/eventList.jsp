@@ -7,13 +7,12 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:genericpage>
-    <jsp:attribute name="title">Wykaz roczników</jsp:attribute>
+    <jsp:attribute name="title">Wykaz wydarzeń</jsp:attribute>
     <jsp:body>
-		<p>Wybierz rok z listy poniżej, aby przejść do szczegółów:</p>
-		<ul>
-			<c:forEach items="${year_list}" var="element"> 
-				<li><a href="/kalendarz/events/${element.year}">${element.year}</a></li>
+		<div class="card-columns">
+			<c:forEach items="${event_list}" var="element"> 
+				<t:event_small item="${element}"></t:event_small>
 			</c:forEach>
-		</ul>
+		</div>
     </jsp:body>
 </t:genericpage>

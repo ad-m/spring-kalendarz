@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import info.jawne.kalendarz.models.Event;
 import info.jawne.kalendarz.models.User;
@@ -36,8 +37,8 @@ public class PersistentEventDao extends EventDao {
 		try (Session session = sessionFactory.openSession()) {
 
 			return session
-					.createQuery("FROM " + Event.class.getName() + " ee WHERE ee.eventStart > :start "
-							+ "AND ee.eventEnd < :end AND ee.user.id = :user_id")
+					.createQuery("FROM " + Event.class.getName() + " ee WHERE ee.eventStart <= :end "
+							+ "AND ee.eventEnd >= :start AND ee.user.id = :user_id order by ee.eventStart")
 					.setParameter("start", start).setParameter("end", end).setParameter("user_id", user.getId())
 					.getResultList();
 		}
@@ -111,6 +112,18 @@ public class PersistentEventDao extends EventDao {
 			return (Event) session
 					.createQuery("FROM " + Event.class.getName() + " as e left join fetch e.category where e.id = :id")
 					.setParameter("id", id).getSingleResult();
+		}
+	}
+
+	@Override
+	public boolean isDateFree(User user, Date start, Date end) {
+		try (Session session = sessionFactory.openSession()) {
+			@SuppressWarnings("unchecked")
+			Query<Long> query = session
+					.createQuery("select count(*) FROM " + Event.class.getName()
+							+ " as e where e.user.id = :user and  eventEnd >= :start AND eventStart <= :end")
+					.setParameter("user", user.getId()).setParameter("start", start).setParameter("end", end);
+			return (query.getSingleResult()) == 0;
 		}
 	};
 }

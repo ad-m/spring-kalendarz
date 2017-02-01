@@ -20,26 +20,42 @@ public class Week {
 		return week_no;
 	}
 
-	public Date getStart() {
+	private Calendar getCalendar() {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, this.year);
-		cal.set(Calendar.WEEK_OF_YEAR, this.week_no * 7);
+		cal.set(Calendar.WEEK_OF_YEAR, this.week_no);
 		cal.set(Calendar.HOUR, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
+		return cal;
+	}
+
+	public Date getStart() {
+		Calendar cal = getCalendar();
 		return cal.getTime();
 	}
 
 	public Date getEnd() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(Calendar.YEAR, this.year);
-		cal.set(Calendar.WEEK_OF_YEAR, this.week_no * 7);
-		cal.set(Calendar.HOUR, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
+		Calendar cal = getCalendar();
 		cal.add(Calendar.DAY_OF_YEAR, 7);
 		return cal.getTime();
-
 	}
+
+	public Week getNext() {
+		Calendar cal = getCalendar();
+		cal.add(Calendar.WEEK_OF_YEAR, 1);
+		return new Week(cal.get(Calendar.YEAR), cal.get(Calendar.WEEK_OF_YEAR));
+	}
+
+	public Week getPrev() {
+		Calendar cal = getCalendar();
+		cal.add(Calendar.WEEK_OF_YEAR, -1);
+		return new Week(cal.get(Calendar.YEAR), cal.get(Calendar.WEEK_OF_YEAR));
+	}
+
+	@Override
+	public String toString() {
+		return "tydzień " + week_no + " roku " + year;
+	}
+
 }

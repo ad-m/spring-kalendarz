@@ -11,10 +11,19 @@
      ${event.description}
     </jsp:attribute>
     <jsp:body>
-		<p>Start: ${event.eventStart}</p>
-		<p>End: ${event.eventEnd}</p>
-		<c:if test="${not empty event.category}">
-    		<p>Category: ${event.category.name}</p>
-		</c:if>
+		<div class="card text-center">
+		  <div class="card-block">
+		    <h4 class="card-title"><c:out value="${event.category.name}"/></h4>
+		    <p class="card-text"><c:out value="${event.description}"/></p>
+		  </div>
+		  <div class="card-footer text-muted">
+		    <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${event.eventStart}" />
+		    -
+		    <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${event.eventEnd}" />
+		    ( ${event.duration} )
+		  </div>
+		</div>
+		<a href="/kalendarz/events/${event.year}/${event.week}" class="pull-right btn btn-secondary btn-sm">Zobacz tydzień</a>
+		<a href="/kalendarz/events/~create/edit-${event.id}" class="pull-right btn btn-primary btn-sm">Edytuj</a>
     </jsp:body>
 </t:genericpage>

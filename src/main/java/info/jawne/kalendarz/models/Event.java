@@ -1,7 +1,10 @@
 package info.jawne.kalendarz.models;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -26,7 +29,7 @@ public class Event {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id")
 	private Category category;
 
@@ -72,10 +75,15 @@ public class Event {
 		return id;
 	}
 
-	public Month getMonth() {
+	public int getYear() {
 		LocalDate localDate = getEventStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		return new Month(localDate.getMonthValue(), localDate.getYear());
+		return localDate.getYear();
+	}
 
+	public int getWeek() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getEventStart());
+		return cal.get(Calendar.WEEK_OF_YEAR);
 	}
 
 	public User getUser() {
@@ -108,8 +116,15 @@ public class Event {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + id + ", user=" + user + ", category=" + category + ", description=" + description
-				+ ", eventEnd=" + eventEnd + ", eventStart=" + eventStart + "]";
+		return "Event [id=" + id + ", description=" + description + ", eventStart=" + eventStart + ", eventEnd="
+				+ eventEnd + "]";
+	}
+
+	public Duration getDuration() {
+		ZonedDateTime duration_start = ZonedDateTime.ofInstant(this.getEventStart().toInstant(),
+				ZoneId.systemDefault());
+		ZonedDateTime duration_end = ZonedDateTime.ofInstant(this.getEventEnd().toInstant(), ZoneId.systemDefault());
+		return Duration.between(duration_start, duration_end);
 	}
 
 }

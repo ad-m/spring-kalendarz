@@ -28,9 +28,9 @@ import info.jawne.kalendarz.models.User;
 @Controller
 @RequestMapping(value = "/categories")
 public class CategoryFormController {
-	private final Log log = LogFactory.getLog(getClass());
 	@Autowired
 	CategoryDao category_dao;
+	private final Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource messageSource;

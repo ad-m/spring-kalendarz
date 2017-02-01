@@ -24,4 +24,5 @@ abstract public class EventDao implements AbstractDao<Event> {
 
 	abstract public Date getMin(User user);
 
+	public abstract boolean isDateFree(User user, Date start, Date end);;
 }

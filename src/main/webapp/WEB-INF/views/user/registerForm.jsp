@@ -11,32 +11,11 @@
       <fmt:message key="registerForm.label"/>
     </jsp:attribute>
     <jsp:body>
-		<form:form commandName="registerCommand">
-			<div class="form-group row">
-	      		<label class="col-sm-2 col-form-label"><fmt:message key="registerForm.username"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="username" class="form-control"/>
-	      		</div>
-	    	</div>
-		    <div class="form-group row">
-	    		<label class="col-sm-2 col-form-label"><fmt:message key="registerForm.password"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="password" type="password" class="form-control"/>
-					<form:errors path="password" cssStyle="color:red;"/>
-		    	</div>
-	    	</div>
-	    	<div class="form-group row">
-	    		<label class="col-sm-2 col-form-label"><fmt:message key="registerForm.confirmationPassword"/></label>
-	      		<div class="col-sm-10">
-	        		<form:input path="confirmationPassword" type="password" class="form-control"/>
-					<form:errors path="confirmationPassword" cssStyle="color:red;"/>
-		    	</div>
-	    	</div>
-	    	<div class="form-group row">
-	    		<div class="offset-sm-2 col-sm-10">
-	        		<button type="submit" class="btn btn-primary"><fmt:message key="registerForm.submit"/></button>
-		      	</div>
-	    	</div>    
+		<form:form commandName="registerCommand" class="col-sm-6 col-md-5 offset-md-2">
+			<t:form_input key="registerForm.username" path="username"/>
+			<t:form_password key="registerForm.password" path="password"/>
+			<t:form_input key="registerForm.confirmationPassword" path="confirmationPassword"/>
+			<t:form_submit key="registerForm.submit"/>
 		</form:form>
 
     </jsp:body>

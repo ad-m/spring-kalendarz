@@ -1,50 +1,38 @@
 package info.jawne.kalendarz.controllers.commands;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import info.jawne.kalendarz.models.Category;
-import info.jawne.kalendarz.models.Period;
+import info.jawne.kalendarz.models.DurationTime;
 
 public class EventLookupCommand {
-	@NotBlank
-	String name;
 
-	@NotBlank
-	String description;
-
-	@NotBlank
-	Category category;
-
-	@NotBlank
+	@NotNull
 	Date date;
 
-	@NotBlank
-	Period period;
+	@NotNull
+	Duration durationEvent;
 
-	public String getName() {
-		return name;
+	@NotNull
+	DurationTime durationLookup;
+
+	public DurationTime getDurationLookup() {
+		return durationLookup;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDurationLookup(DurationTime durationLookup) {
+		this.durationLookup = durationLookup;
 	}
 
-	public String getDescription() {
-		return description;
+	public Duration getDurationEvent() {
+		return durationEvent;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setDurationEvent(Duration durationEvent) {
+		this.durationEvent = durationEvent;
 	}
 
 	public Date getDate() {
@@ -55,12 +43,11 @@ public class EventLookupCommand {
 		this.date = date;
 	}
 
-	public Period getPeriod() {
-		return period;
+	public Date getStart() {
+		return Date.from(getDate().toInstant().minus(durationLookup.getDuration()));
 	}
 
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
-
+	public Date getEnd() {
+		return Date.from(getDate().toInstant().plus(durationLookup.getDuration()));
+	};
 }
